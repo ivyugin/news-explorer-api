@@ -1,1 +1,1 @@
-# news-explorer-api
+API Дипломного проекта News
