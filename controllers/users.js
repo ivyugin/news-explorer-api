@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const ErrorWithStatus = require('../errors/ErrorWithStatus');
 const User = require('../models/user');
 
-const JWT_SECRET = 'dev';
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.getUsersMe = (req, res) => {
   User.findById(req.user._id)
@@ -32,7 +32,7 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        JWT_SECRET,
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
         { expiresIn: '30d' },
       );
       res
