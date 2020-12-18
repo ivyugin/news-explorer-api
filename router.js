@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi, Segments } = require('celebrate');
+const ErrorWithStatus = require('./errors/ErrorWithStatus');
 const auth = require('./middlewares/auth');
 
 const {
@@ -80,5 +81,9 @@ router.delete('/articles/:articleId',
       articleId: Joi.string().hex().length(24),
     }),
   }), auth, deleteArticles);
+
+router.get('*', () => {
+  throw new ErrorWithStatus(404, 'Запрашиваемый ресурс не найден');
+});
 
 module.exports = router;
