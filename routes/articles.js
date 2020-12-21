@@ -1,4 +1,5 @@
 const articlesRouter = require('express').Router();
+const validator = require('validator');
 const { celebrate, Joi, Segments } = require('celebrate');
 const auth = require('../middlewares/auth');
 
@@ -28,10 +29,20 @@ articlesRouter.post('/',
         .min(1),
       link: Joi.string()
         .required()
-        .pattern(/^https?:\/\/[a-z0-9\-./_]+\.[a-z]{2,5}[a-z0-9\-/]*$/),
+        .custom((value, helpers) => {
+          if (validator.isURL(value)) {
+            return value;
+          }
+          return helpers.error('link url not valid');
+        }),
       image: Joi.string()
         .required()
-        .pattern(/^https?:\/\/[a-z0-9\-./_]+\.[a-z]{2,5}[a-z0-9\-/]*$/),
+        .custom((value, helpers) => {
+          if (validator.isURL(value)) {
+            return value;
+          }
+          return helpers.error('image url not valid');
+        }),
     }),
   }), auth, postArticles);
 
