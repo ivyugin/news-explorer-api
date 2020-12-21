@@ -60,7 +60,7 @@ articleSchema.statics.DeleteWithPermissionCheck = function (articleId, userId) {
         throw new ErrorWithStatus(404, 'Articl not found');
       }
       if (!article.owner.equals(userId)) {
-        throw new ErrorWithStatus(401, 'Permission denaed');
+        throw new ErrorWithStatus(403, 'Permission denaed');
       }
       return this.findByIdAndRemove(articleId);
     });

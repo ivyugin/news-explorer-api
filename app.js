@@ -4,21 +4,22 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
 const { errors } = require('celebrate');
+const limiter = require('./middlewares/rateLimiter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const errorHandler = require('./middlewares/errorHandler');
+const router = require('./routes/index');
+const config = require('./server-config.json');
 
-const router = require('./router');
-
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, MOONGODB = config.mongodb.serverLink } = process.env;
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/articledb', {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-});
+mongoose.connect(MOONGODB, config.mongodb.serverSettings);
 
+app.use(limiter);
+app.use(helmet());
 app.use(cors());
 
 app.use(cookieParser());
@@ -30,21 +31,11 @@ app.use('/', router);
 
 app.use(errorLogger);
 
-// joi + celebrate errors
+// celebrate errors
 app.use(errors());
 
-// eentral error handler
-// eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'Server error'
-        : message,
-    });
-});
+// central error handler
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

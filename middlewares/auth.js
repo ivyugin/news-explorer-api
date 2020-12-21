@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 const ErrorWithStatus = require('../errors/ErrorWithStatus');
+const config = require('../server-config.json');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-// eslint-disable-next-line no-unused-vars
 module.exports = (req, res, next) => {
   const token = req.cookies.jwt;
   if (!token) {
@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
   }
   let payload;
   try {
-    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : config.JWT_DEV);
   } catch (err) {
     throw new ErrorWithStatus(401, 'Authorisation needed.');
   }

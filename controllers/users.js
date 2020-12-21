@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const ErrorWithStatus = require('../errors/ErrorWithStatus');
 const User = require('../models/user');
+const config = require('../server-config.json');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -16,12 +17,16 @@ module.exports.createUser = (req, res, next) => {
   bcrypt.hash(password, 10)
     .then((hash) => User.create({ email, password: hash, name }))
     .then((user) => {
-      // eslint-disable-next-line no-param-reassign
-      user.password = undefined;
+      const userData = { ...user.toObject(), password: undefined };
       res
-        .send(user);
+        .send(userData);
     })
-    .catch((err) => { throw new ErrorWithStatus(404, err.message); })
+    .catch((err) => {
+      if (err.code === 11000) {
+        throw new ErrorWithStatus(409, 'User with current email already exists.');
+      }
+      throw new ErrorWithStatus(500, 'Server error.');
+    })
     .catch(next);
 };
 
@@ -32,7 +37,7 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        NODE_ENV === 'production' ? JWT_SECRET : config.JWT_DEV,
         { expiresIn: '30d' },
       );
       res

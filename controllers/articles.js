@@ -16,8 +16,9 @@ module.exports.postArticles = (req, res, next) => {
     owner: req.user._id,
   })
     .then((article) => {
+      const articleData = { ...article.toObject(), owner: undefined };
       res
-        .send(article);
+        .send(articleData);
     })
     .catch((err) => { throw new ErrorWithStatus(404, err.message); })
     .catch(next);
