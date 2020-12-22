@@ -1,0 +1,11 @@
+{
+  "mongodb": {
+    "serverLink": "mongodb://localhost:27017/articledb",
+    "serverSettings": {
+      "useNewUrlParser": true,
+      "useCreateIndex": true,
+      "useFindAndModify": false
+    }
+  },
+  "JWT_DEV": "dev-secret"
+}
