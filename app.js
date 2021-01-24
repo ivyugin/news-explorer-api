@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+
+const corsOptions = { origin: '*', credentials: true };
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -20,7 +22,7 @@ mongoose.connect(MOONGODB, config.mongodb.serverSettings);
 
 app.use(limiter);
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(cookieParser());
 app.use(bodyParser.json());
