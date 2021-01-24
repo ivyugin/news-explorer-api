@@ -6,6 +6,7 @@ const {
   createUser,
   login,
   getUsersMe,
+  logout,
 } = require('../controllers/users');
 
 usresRouter.post('/signup',
@@ -36,6 +37,8 @@ usresRouter.post('/signin',
         .min(1),
     }),
   }), login);
+
+usresRouter.get('/logout', auth, logout);
 
 usresRouter.get('/users/me', auth, getUsersMe);
 

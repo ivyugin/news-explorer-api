@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 
-const corsOptions = { origin: '*', credentials: true };
+const corsOptions = { origin: 'http://localhost:3000', credentials: true };
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
