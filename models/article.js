@@ -27,7 +27,7 @@ const articleSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(link) {
-        const regex = /^https?:\/\/[a-z0-9\-./_]+\.[a-z]{2,5}[a-z0-9\-/]*$/;
+        const regex = /^https?:\/\/[a-z0-9\-./_]+\.[a-z]{2,5}[a-z0-9\-/?]*$/;
         return regex.test(link);
       },
       message: 'error article link validate',
@@ -38,7 +38,7 @@ const articleSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(imageUrl) {
-        const regex = /^https?:\/\/[a-z0-9\-./_]+\.[a-z]{2,5}[a-z0-9\-/]*$/;
+        const regex = /^https?:\/\/[a-z0-9\-./_]+\.[a-z]{2,5}[a-z0-9\-/?]*$/;
         return regex.test(imageUrl);
       },
       message: 'error image url validate',

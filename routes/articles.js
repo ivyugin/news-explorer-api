@@ -28,21 +28,21 @@ articlesRouter.post('/',
         .required()
         .min(1),
       link: Joi.string()
-        .required(),
-      //  .custom((value, helpers) => {
-      //  if (validator.isURL(value)) {
-      //    return value;
-      //  }
-      //  return helpers.error('link url not valid');
-      //  }),
+        .required()
+        .custom((value, helpers) => {
+          if (validator.isURL(value)) {
+            return value;
+          }
+          return helpers.error('link url not valid');
+        }),
       image: Joi.string()
-        .required(),
-      //  .custom((value, helpers) => {
-      //  if (validator.isURL(value)) {
-      //    return value;
-      //   }
-      //  return helpers.error('image url not valid');
-      //  }),
+        .required()
+        .custom((value, helpers) => {
+          if (validator.isURL(value)) {
+            return value;
+          }
+          return helpers.error('image url not valid');
+        }),
     }),
   }), auth, postArticles);
 
